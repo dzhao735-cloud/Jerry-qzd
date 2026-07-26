@@ -1,0 +1,4 @@
+version.txt
+lib.ahk
+Main.ahk
+崩铁/像素金币.ahk

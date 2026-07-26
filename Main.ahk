@@ -29,7 +29,7 @@ ReleaseAlt() {
 }
 
 categories := Map(
-    "精英怪", [
+    "崩铁", [
         ["像素金币", "崩铁\像素金币.ahk"],
     ],
 )
@@ -54,11 +54,10 @@ C_XFG    := "888998"    ; 关闭按钮
 C_XHV    := "2A2750"    ; 关闭按钮悬停底
 
 ; ==================== 布局尺寸 ====================
-WIN_W   := 860
+WIN_W   := 620
 TITLE_H := 40
 PAD     := 18
-RIGHT_W := 250
-SEP_X   := WIN_W - RIGHT_W - 1        ; 分栏线x
+SEP_X   := WIN_W - 1                  ; 左侧内容最大 x
 LEFT_W  := SEP_X - PAD * 2            ; 左栏内容宽
 BTN_W   := (LEFT_W - 18) // 3
 BTN_H   := 42
@@ -67,8 +66,8 @@ GAP     := 9
 global gButtons := Map()   ; hwnd -> 按钮的常态/悬停配色
 global gHover := 0         ; 当前悬停按钮的hwnd
 
-; 0x2000000=WS_CLIPCHILDREN: 父窗口不重绘控件区域, 配合控件的WS_CLIPSIBLINGS让圆角区域裁剪生效
-myGui := Gui("+AlwaysOnTop -Caption +E0x08000000 +0x2000000", "原神锄地脚本")  ; WS_EX_NOACTIVATE：点路线按钮也不抢焦点/不切回桌面
+
+myGui := Gui("+AlwaysOnTop -Caption +E0x08000000 +0x2000000", "jerry-qzd")
 myGui.BackColor := C_WINBG
 myGui.MarginX := 0
 myGui.MarginY := 0
@@ -76,7 +75,7 @@ myGui.MarginY := 0
 ; -------- 标题栏(无边框窗口自绘; 按住标题栏/空白处可拖动) --------
 myGui.Add("Text", "x0 y0 w" WIN_W " h" TITLE_H " Background" C_TBAR)
 myGui.SetFont("s12 w700 c" C_ACC, "Microsoft YaHei")
-myGui.Add("Text", "x16 y0 w240 h" TITLE_H " +0x200 Background" C_TBAR, "◆ 原神锄地启动器")
+myGui.Add("Text", "x16 y0 w240 h" TITLE_H " +0x200 Background" C_TBAR, "◆ jerry-qzd")
 closeBtn := MakeBtn(myGui, WIN_W - 38, 7, 26, 26, 6, "✕", "s11", C_TBAR, C_XFG, C_XHV, C_FG)
 closeBtn.OnEvent("Click", (*) => ExitApp())
 
@@ -119,53 +118,6 @@ yPos += 8
 exitBtn := MakeBtn(myGui, PAD, yPos, LEFT_W, 36, 36, "退　出", "s11 w600", C_WINBG, C_ACC, C_EXITHV, C_ACC, C_EXITBD)
 exitBtn.OnEvent("Click", (*) => ExitApp())
 winH := yPos + 36 + 20
-
-; -------- 右栏: 热键功能(键帽样式) --------
-myGui.Add("Text", "x" SEP_X " y" TITLE_H " w1 h" (winH - TITLE_H) " Background" C_SEP)
-myGui.SetFont("s11 w700 c" C_ACC, "Microsoft YaHei")
-myGui.Add("Text", "x" (SEP_X + 19) " y" (TITLE_H + 16) " w200 h22 +0x200 Background" C_WINBG, "◆ 热键功能")
-
-; [键名, 说明, 键帽宽, 说明行数]  ; "#SEC"=分组小标题
-hotkeys := [
-    ["Tab", "执行当前点位", 46, 1],
-    ["←",   "后退一个点位", 34, 1],
-    ["→",   "前进一个点位", 34, 1],
-    ["F3",  "暂停/开启脚本", 34, 1],
-    ["F4",  "重新选择路线", 34, 1],
-    ["F7",  "圣遗物自动拾取`n(默认开启 且只对-6生效)", 34, 2],
-    ["F12", "调整地图大小`n(建议连按两次)", 40, 2],
-    ["#SEC", "吃药功能", 0, 0],
-    ["~/``", "回复体力药 (饭团)", 46, 1],
-    ["F10", "恰 (小美) 背包里`n第2个和第3个的位置", 40, 2],
-    ["-/—", "夜兰 (乆刄)", 46, 1],
-    ["=/+", "火神 (乆刄)", 46, 1],
-]
-hkY := TITLE_H + 52
-for _, hk in hotkeys {
-    if (hk[1] = "#SEC") {   ; 分组小标题: ◆ 名称 ────
-        hkY += 6
-        myGui.SetFont("s7 c" C_ACC, "Microsoft YaHei")
-        myGui.Add("Text", "x" (SEP_X + 18) " y" hkY " w12 h20 +0x200 Background" C_WINBG, "◆")
-        myGui.SetFont("s10 w700 c" C_ACC, "Microsoft YaHei")
-        secW := StrLen(hk[2]) * 15 + 6
-        myGui.Add("Text", "x" (SEP_X + 32) " y" hkY " w" secW " h20 +0x200 Background" C_WINBG, hk[2])
-        secLineX := SEP_X + 32 + secW
-        AddFadeLine(myGui, secLineX, hkY + 10, WIN_W - PAD - secLineX, C_ACC, C_WINBG)
-        hkY += 30
-        continue
-    }
-    keyW := hk[3]
-    kbd := myGui.Add("Text", "x" (SEP_X + 18) " y" (hkY - 1) " w" (keyW + 2) " h26 +0x4000000 Background" C_KEYBD)
-    RoundCtrl(kbd, keyW + 2, 26, 6)
-    key := myGui.Add("Text", "x" (SEP_X + 19) " y" hkY " w" keyW " h24 Center +0x200 +0x4000000 Background" C_KEYBG, hk[1])
-    key.SetFont("s10 c" C_KEY, "Consolas")
-    RoundCtrl(key, keyW, 24, 5)
-    RaiseCtrl(key)   ; 提到键帽边框层之上
-    myGui.SetFont("s10 c" C_DESC, "Microsoft YaHei")
-    descX := SEP_X + 19 + keyW + 12
-    myGui.Add("Text", "x" descX " y" (hkY + 3) " w" (WIN_W - PAD - descX) " Background" C_WINBG, hk[2])
-    hkY += (hk[4] = 2) ? 50 : 32
-}
 
 ; -------- 鼠标消息: 悬停变色 / 手型光标 / 拖动窗口 --------
 OnMessage(0x200, OnMouseMove)    ; WM_MOUSEMOVE
