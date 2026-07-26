@@ -20,7 +20,6 @@ z:: {
     Looping := !Looping
     if Looping {
         ShowToast("像素金币循环已启动，按 Z 停止", 1500)
-        SetTimer("RunLoop", -10)
     } else {
         ShowToast("像素金币循环已停止", 1500)
     }
