@@ -14,7 +14,6 @@ global Looping := false
 
 CoordMode("Mouse", "Screen")
 
-#HotIf WinActive("ahk_class UnityWndClass") && (InStr(WinGetTitle("A"), "崩坏：星穹铁道") || InStr(WinGetTitle("A"), "Honkai: Star Rail") || InStr(WinGetTitle("A"), "Star Rail"))
 z:: {
     global Looping
     Looping := !Looping
