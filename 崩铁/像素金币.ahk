@@ -30,7 +30,7 @@ RunLoop() {
     global Looping
     while Looping {
         Send("{a down}")
-        if (!WaitWhileRunning(54000))
+        if (!WaitWhileRunning(54700))
             break
         Send("{a up}")
         if (!WaitWhileRunning(100))
@@ -41,7 +41,7 @@ RunLoop() {
             break
 
         MouseMove_Click_Sleep(227, 1440, 0)
-        if (!WaitWhileRunning(1500))
+        if (!WaitWhileRunning(3500))
             break
 
         Send("f")
