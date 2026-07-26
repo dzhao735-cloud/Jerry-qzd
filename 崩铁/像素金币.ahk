@@ -13,7 +13,7 @@
 global Looping := false
 
 CoordMode("Mouse", "Screen")
-
+#HotIf WinActive("ahk_class UnityWndClass ahk_exe StarRail.exe")
 z:: {
     global Looping
     Looping := !Looping
@@ -30,7 +30,7 @@ RunLoop() {
     global Looping
     while Looping {
         Send("{a down}")
-        if (!WaitWhileRunning(54700))
+        if (!WaitWhileRunning(55000))
             break
         Send("{a up}")
         if (!WaitWhileRunning(100))
@@ -45,7 +45,7 @@ RunLoop() {
             break
 
         Send("f")
-        if (!WaitWhileRunning(4000))
+        if (!WaitWhileRunning(4200))
             break
     }
     if (!Looping)
